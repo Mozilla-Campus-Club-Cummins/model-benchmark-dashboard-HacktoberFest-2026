@@ -422,3 +422,113 @@ body {
     min-height: 320px;
   }
 }
+
+/* Responsive dashboard improvements */
+
+.dashboard,
+.dashboard-content,
+.dashboard-card {
+  min-width: 0;
+}
+
+.dashboard-content {
+  width: min(1200px, 90%);
+}
+
+.chart-container {
+  width: 100%;
+  min-width: 0;
+}
+
+.table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper table {
+  min-width: 700px;
+}
+
+.model-selector label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 32px 5%;
+  }
+
+  .header h1 {
+    font-size: clamp(24px, 7vw, 30px);
+    overflow-wrap: anywhere;
+  }
+
+  .dashboard-content {
+    width: 94%;
+    margin: 20px auto;
+  }
+
+  .dashboard-card {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card strong {
+    font-size: 24px;
+    overflow-wrap: anywhere;
+  }
+
+  .stat-card .model-name {
+    font-size: 16px;
+  }
+
+  .section-heading {
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .section-heading h2 {
+    font-size: 19px;
+  }
+
+  .model-selector {
+    gap: 8px;
+  }
+
+  .model-selector label {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .chart-container {
+    min-height: 280px;
+  }
+
+  .table-wrapper th,
+  .table-wrapper td {
+    padding: 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .stats-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-card {
+    padding: 12px;
+  }
+}
