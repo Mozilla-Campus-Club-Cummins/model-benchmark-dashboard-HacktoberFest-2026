@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import BenchmarkTable from "./components/BenchmarkTable";
 import BenchmarkChart from "./components/BenchmarkChart";
@@ -6,9 +7,9 @@ import { benchmarks } from "./data/benchmarks";
 import "./App.css";
 
 function App() {
-  const [selectedModels, setSelectedModels] = useState(
-    benchmarks.map((item) => item.model)
-  );
+  const allModels = benchmarks.map((item) => item.model);
+
+  const [selectedModels, setSelectedModels] = useState(allModels);
 
   const filteredBenchmarks = benchmarks.filter((item) =>
     selectedModels.includes(item.model)
@@ -23,8 +24,7 @@ function App() {
           (total, item) =>
             total + item.mmlu + item.gsm8k + item.humanEval,
           0
-        ) /
-        (filteredBenchmarks.length * totalBenchmarks)
+        ) / (filteredBenchmarks.length * totalBenchmarks)
       : 0;
 
   const bestModel =
@@ -40,15 +40,16 @@ function App() {
         })
       : null;
 
+  const restoreDefaultSelection = () => {
+    setSelectedModels(allModels);
+  };
+
   return (
     <div className="dashboard">
-      {/* Header */}
       <header className="header">
         <div>
           <p className="eyebrow">AI MODEL ANALYTICS</p>
-
           <h1>Model Benchmark Dashboard</h1>
-
           <p className="subtitle">
             Compare open-weight AI models across standard benchmark scores.
           </p>
@@ -56,37 +57,26 @@ function App() {
       </header>
 
       <main className="dashboard-content">
-
-        {/* Statistics */}
         <section className="stats-grid">
-
           <div className="stat-card">
             <span className="stat-label">Total Models</span>
-
             <strong>{totalModels}</strong>
-
-            <span className="stat-description">
-              Models in dataset
-            </span>
+            <span className="stat-description">Models in dataset</span>
           </div>
 
           <div className="stat-card">
             <span className="stat-label">Benchmarks</span>
-
             <strong>{totalBenchmarks}</strong>
-
             <span className="stat-description">
-              MMLU, GSM8K & HumanEval
+              MMLU, GSM8K &amp; HumanEval
             </span>
           </div>
 
           <div className="stat-card">
             <span className="stat-label">Top Model</span>
-
             <strong className="model-name">
               {bestModel?.model ?? "—"}
             </strong>
-
             <span className="stat-description">
               Highest combined score
             </span>
@@ -94,99 +84,95 @@ function App() {
 
           <div className="stat-card">
             <span className="stat-label">Average Score</span>
-
             <strong>
               {filteredBenchmarks.length > 0
                 ? `${averageScore.toFixed(1)}%`
                 : "—"}
             </strong>
-
             <span className="stat-description">
               Across selected models
             </span>
           </div>
-
         </section>
 
-        {/* Model Selection */}
         <section className="dashboard-card">
-
           <div className="section-heading">
             <div>
               <p className="section-label">COMPARE</p>
-
-            
+              <h2>Select Models</h2>
             </div>
 
             <span className="selection-count">
-              {selectedModels.length} selected
+              {selectedModels.length} of {totalModels} selected
             </span>
           </div>
 
           <ModelSelector
-            models={benchmarks.map((item) => item.model)}
+            models={allModels}
             selectedModels={selectedModels}
             onChange={setSelectedModels}
           />
-
         </section>
 
-        {/* Chart and Table */}
         {filteredBenchmarks.length > 0 ? (
           <>
-            {/* Benchmark Chart */}
             <section className="dashboard-card">
-
               <div className="section-heading">
                 <div>
                   <p className="section-label">PERFORMANCE</p>
-
                   <h2>Benchmark Comparison</h2>
                 </div>
               </div>
 
               <div className="chart-container">
-                <BenchmarkChart
-                  benchmarks={filteredBenchmarks}
-                />
+                <BenchmarkChart benchmarks={filteredBenchmarks} />
               </div>
-
             </section>
 
-            {/* Benchmark Table */}
             <section className="dashboard-card">
-
               <div className="section-heading">
                 <div>
                   <p className="section-label">DATA</p>
-
                   <h2>Benchmark Scores</h2>
                 </div>
               </div>
 
-              <BenchmarkTable
-                benchmarks={filteredBenchmarks}
-              />
-
+              <BenchmarkTable benchmarks={filteredBenchmarks} />
             </section>
           </>
         ) : (
-          /* Empty State */
-          <section className="dashboard-card empty-state">
+          <section
+            className="dashboard-card empty-state"
+            role="status"
+            aria-live="polite"
+          >
+            <div className="empty-state-icon" aria-hidden="true">
+              📊
+            </div>
 
+            <p className="section-label">NOTHING TO COMPARE</p>
             <h2>No models selected</h2>
 
             <p>
-              Select at least one model above to view benchmark
-              scores and comparison.
+              All models are currently unchecked. Restore the default
+              selection to bring back the benchmark chart and scores.
             </p>
 
+            <button
+              type="button"
+              className="restore-selection-button"
+              onClick={restoreDefaultSelection}
+            >
+              Restore default selection
+            </button>
+
+            <span className="empty-state-hint">
+              You can then select or deselect individual models above.
+            </span>
           </section>
         )}
-
       </main>
 
-      {/* Footer */}
       <footer className="footer">
         Model Benchmark Dashboard • Built with React + TypeScript
       </footer>
