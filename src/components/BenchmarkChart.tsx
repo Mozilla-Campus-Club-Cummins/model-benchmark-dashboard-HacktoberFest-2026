@@ -21,47 +21,70 @@ type BenchmarkChartProps = {
 };
 
 function BenchmarkChart({ benchmarks }: BenchmarkChartProps) {
+
+  if (benchmarks.length === 0) {
+    return <p>No models selected for comparison.</p>;
+  }
+
   return (
-    <ResponsiveContainer width="100%" height={380}>
+    <ResponsiveContainer
+      width="100%"
+      height={Math.max(380, benchmarks.length * 65)}
+    >
       <BarChart
         data={benchmarks}
+        layout="vertical"
         margin={{
-          top: 10,
-          right: 20,
-          left: 10,
+          top: 20,
+          right: 30,
+          left: 30,
           bottom: 10,
         }}
+        barGap={4}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
 
         <XAxis
-          dataKey="model"
-          tick={{ fontSize: 12 }}
+          type="number"
+          domain={[0, 100]}
+          tickFormatter={(value) => `${value}%`}
         />
 
         <YAxis
-          domain={[0, 100]}
+          type="category"
+          dataKey="model"
+          width={130}
           tick={{ fontSize: 12 }}
+          interval={0}
         />
 
-        <Tooltip />
+        <Tooltip
+          formatter={(value) => [`${value}%`]}
+        />
 
-        <Legend />
+        <Legend verticalAlign="top" height={36} />
 
         <Bar
           dataKey="mmlu"
           name="MMLU"
+          fill="#8884d8"
+          barSize={18}
         />
 
         <Bar
           dataKey="gsm8k"
           name="GSM8K"
+          fill="#82ca9d"
+          barSize={18}
         />
 
         <Bar
           dataKey="humanEval"
           name="HumanEval"
+          fill="#ffc658"
+          barSize={18}
         />
+
       </BarChart>
     </ResponsiveContainer>
   );
